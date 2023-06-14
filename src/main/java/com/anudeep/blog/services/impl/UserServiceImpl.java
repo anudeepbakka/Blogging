@@ -3,10 +3,14 @@ package com.anudeep.blog.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.anudeep.blog.entites.Role;
 import com.anudeep.blog.exceptions.*;
 
+import com.anudeep.blog.repositories.RolesRepo;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.anudeep.blog.entites.user;
@@ -20,6 +24,11 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepo userRepo;
 	private ModelMapper modelMapper;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RolesRepo rolesRepo;
 	
 	@Override
 	public UserDto createUser(UserDto userDto) {
@@ -93,4 +102,13 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
+	public UserDto registerNewUser(UserDto userDto) {
+		user user = this.dtoTouser(userDto);
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		Role role = this.rolesRepo.findById(502).get();
+		user.getRoles().add(role);
+		user save = this.userRepo.save(user);
+		return this.userToDto(save);
+	}
 }
