@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
-public class SwaggerCongig {
+public class SwaggerConfig {
 	public static final String AuthorizationHeader="Authorization";
 	private ApiKey apikey(){
 		return new ApiKey("JWT",AuthorizationHeader,"header");
@@ -30,7 +30,7 @@ public class SwaggerCongig {
 
 	private List<SecurityReference> sf(){
 		AuthorizationScope scope = new AuthorizationScope("global","Access Everything");
-	return Arrays.asList(new SecurityReference("scope",new AuthorizationScope[] {scope}));
+	return Arrays.asList(new SecurityReference("JWT",new AuthorizationScope[] {scope}));
 	}
 
 	@Bean
